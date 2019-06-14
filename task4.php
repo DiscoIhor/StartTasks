@@ -2,40 +2,70 @@
 require_once 'header.php';
 error_reporting(E_ALL | E_STRICT);
 
-
+$arr = array();
 $dbh = new PDO ('mysql:host=localhost;dbname=Task4', 'igor', 'disc0teka');
-$slkt = $dbh->prepare('SELECT * FROM users');
-$slkt2 = $dbh->prepare('SELECT * FROM Product');
-$slkt3 = $dbh->prepare('SELECT * FROM Product_coment'); //coments
-$slkt4 = $dbh->prepare('SELECT * FROM Product_rate');   //rates
-$slkt->execute();
-$slkt2->execute();
-$slkt3->execute();
-$slkt4->execute();
-$rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
-$rows2 = $slkt2->fetchAll(PDO::FETCH_ASSOC);
-$rows3 = $slkt3->fetchAll(PDO::FETCH_ASSOC);
-$rows4 = $slkt4->fetchAll(PDO::FETCH_ASSOC);
-$count = 0;
-foreach ($rows3 as $scndvl) {
-    foreach ($rows4 as $value) {
-        if ($scndvl['product_id'] == $value['product_id']) {
-            $count++;
-        }
+
+for ($i = 1; $i < 11; $i++) {
+    $slkt = $dbh->prepare('SELECT users_id,COUNT(*) AS total FROM Product_coment GROUP BY users_id ORDER BY total DESC LIMIT ' . $i);
+    $arr[$i] = $slkt;
+    $arr[$i]->execute();
+    $rows = $arr[$i]->fetchall(PDO::FETCH_ASSOC);
+}
+
+$count_product = $dbh->prepare('SELECT id FROM Product');
+$count_product->execute();
+$count_product = $count_product->fetchAll(PDO::FETCH_ASSOC);
+
+$i = 0;
+
+foreach ($rows as $key1) {
+    $slkt3[$i] = $dbh->prepare("SELECT `name` FROM `users` WHERE `id` = " . $key1['users_id']);
+    $slkt3[$i]->execute();
+    $rows3[$i] = $slkt3[$i]->fetchAll(PDO::FETCH_ASSOC);
+    $i++;
+}
+
+$i = 1;
+
+foreach ($rows3 as $value) {
+    foreach ($value as $key) {
+        echo "Top " . $i . " user is: " . $key['name'] . "<br>";
+        $i++;
     }
 }
-foreach ($rows as $scndvl){
-    
+
+echo "<br>";
+echo "<br>";
+
+$count_comments = $dbh->prepare('SELECT product_id, SUM(rate) FROM `Product_rate` GROUP BY product_id');
+$count_rate = $dbh->prepare('SELECT product_id, COUNT(*) FROM Product_coment GROUP BY product_id');
+$count_rate->execute();
+$count_rate = $count_rate->fetchAll(PDO::FETCH_ASSOC);
+$count_comments->execute();
+$count_comments = $count_comments->fetchAll(PDO::FETCH_ASSOC);
+$real_product_rate = $dbh ->prepare('');
+
+$i=0;
+$b=0;
+
+foreach ($count_rate as $rate) {
+    $count_r[$i]=$rate['COUNT(*)'];
+    $count_r_prid[$i]=$rate['product_id'];
+    $i++;
 }
-var_dump($rows);
-echo "<br>";
-var_dump($rows2);
-echo "<br>";
-var_dump($rows3);
-echo "<br>";
-var_dump($rows4);
-echo "<br>";
-echo $count . "<br>";
+
+foreach ($count_comments as $comment) {
+    $count_c[$b] = $comment['SUM(rate)'];
+    $count_c_prid[$b] = $comment['product_id'];
+    $b++;
+}
+
+for ($i=0;$i<count($count_product);$i++){
+    if (($count_c_prid[$i] = $count_r_prid[$i])){
+        $real_comment[$i]=($count_c[$i]+$count_r[$i])/2;
+        echo "Средний рейтинг ".($i+1)." товара ".$real_comment[$i]."<br>";
+    }
+}
 ?>
 
 <!---Task4
