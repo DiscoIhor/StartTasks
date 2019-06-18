@@ -41,7 +41,7 @@ foreach ($count_rate_final as $skey) {
     $rate_array[$i] = $skey['product_id'];
     foreach ($count_rate as $item) {
         if ($item['product_id'] == $rate_array[$i]) {
-            echo "Product's rate with id = " . $item['product_id'] . " is " . ($item['SUM(rate)'] / $skey['COUNT(*)']) . "<br>";
+            echo "Product's rate with id = " . $item['product_id'] . " is " . round(($item['SUM(rate)'] / $skey['COUNT(*)']),1,PHP_ROUND_HALF_UP) . "<br>";
         }
     }
     $i++;
