@@ -21,6 +21,7 @@ foreach ($rows as $user_id) {
         }
     }
     $i++;
+
 }
 echo "<br>";
 echo "<br>";
@@ -34,6 +35,7 @@ $count_rate_final = $dbh->prepare('SELECT product_id, COUNT(*) FROM Product_rate
 $count_rate_final->execute();
 $count_rate_final = $count_rate_final->fetchAll(PDO::FETCH_ASSOC);
 $rate_array = array();
+
 $i = 0;
 foreach ($count_rate_final as $skey) {
     $rate_array[$i] = $skey['product_id'];
@@ -48,7 +50,6 @@ foreach ($count_rate_final as $skey) {
 /*$product = $dbh->prepare('SELECT name FROM `Product` WHERE id = ');
 $product->execute();
 $product = $product->fetchAll(PDO::FETCH_ASSOC);*/
-echo "<br>";
 ?>
 
 <!---Task4
