@@ -11,9 +11,11 @@ error_reporting(E_ALL | E_STRICT);
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="text/javascript" src="/jquery-1.10.1.js"></script>
     <meta charset="UTF-8">
     <title>Main page</title>
     <link rel="stylesheet" type="text/css" href="task3.css" media="all">
+    <script src="task3.js"></script>
 </head>
 <body>
 <header>
@@ -53,7 +55,7 @@ error_reporting(E_ALL | E_STRICT);
         } ?>" required>
         <p><textarea rows="10" cols="45" name="text" required></textarea></p>
         <p>
-            <button onclick="sendMessege" value="sMes">Send</button>
+            <button type="submit" value="sMes" class="sMes" formaction="main">Send</button>
         </p>
         <input type="file" name="img">
         </form>
@@ -78,32 +80,17 @@ error_reporting(E_ALL | E_STRICT);
             } catch (PDOException $e) {
                 echo $e->getMessage();
             }
-            /*
+            $i=0;
             foreach ($rows as $scndvl) {
-                echo $scndvl['name']."<br>";
-                echo $scndvl['content']."<br>";
+                echo $scndvl['name'] . "<br>";
+                echo $scndvl['content'] . "<br>";
+                ?>
+                <button value="<?php echo $i; ?>">delete</button>
+                <?php
+                $i++;
+                echo "_______________________________________________________________________________<br>";
             }
-            */
             ?>
-            <script type="text/javascript">
-                var data = <?php echo $jsonstring ?>;
-                for (var key in data) {
-                    document.write(JSON.stringify(data[key]['name']) + ": <br>");
-                    document.write(JSON.stringify(data[key]['content']) + " <br>");
-                    out.innerHTML += data['name'];
-                    out.innerHTML += data['content'];
-                    function sendMessege() {
-                        <?php
-                            /*
-                        foreach ($rows as $scndvl) {
-                            echo $scndvl['name']."<br>";
-                            echo $scndvl['content']."<br>";
-                        }
-                            */
-                        ?>
-                    }
-                }
-            </script>
         </div>
     </div>
 </main>
