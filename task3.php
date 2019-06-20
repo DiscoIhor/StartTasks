@@ -59,7 +59,7 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
                 <textarea id="textform" rows="10" cols="45" name="textform" placeholder="Your text" required></textarea>
             </p>
             <p>
-                <input type="submit" id="btn" value="Send">
+                <input type="submit" id="btn" name="Send" value="Send">
             </p>
             <input type="file" id="img" name="img">
         </form>
@@ -73,7 +73,7 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
                 echo $scndvl['name'] . "<br>";
                 echo $scndvl['content'] . "<br>";
                 ?>
-                <button value="<?php echo $i++; ?>">delete</button>
+                <button value="<?php echo $scndvl['name']; ?>">delete</button>
                 <?php
                 echo "_______________________________________________________________________________<br>";
             }
@@ -81,7 +81,7 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
                 echo $_POST['title'] . "<br>";
                 echo $_POST['textform'] . "<br>";
                 ?>
-                <button value="new">delete</button>
+                <button value="<?php echo $_POST['title'] ?>">delete</button>
                 <?php
                 echo "_______________________________________________________________________________<br>";
             }
@@ -119,6 +119,7 @@ if (isset($_POST['title']) && isset($_POST['textform'])) {
     $ins->bindValue(':name', $title, PDO::PARAM_STR_CHAR);
     $ins->execute();
 }
+var_dump($_POST);
 ?>
 
 
