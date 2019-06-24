@@ -148,7 +148,6 @@ if (isset($_POST['del_btn'])) {
 
 var_dump($_POST);
 
-//somthingnew adadada
 
 ?>
 
