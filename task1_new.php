@@ -10,8 +10,8 @@ Hunson Abadeer
 </head>
 <body>
 
-<div class="div1" onmousemove="myFunction(event)">
-    <div class="div2" onmouseenter="runDiv(this)"></div>
+<div class="div1" id="div1">
+    <div class="div2" id="div2"></div>
 </div>
 
 <div id="log"></div>
@@ -25,33 +25,42 @@ Hunson Abadeer
 <p id="demo"></p>
 
 <script>
-    var div = document.getElementsByClassName('div2');
-    var borders = document.getElementsByClassName('div1');
-    var div1coord = div.getBoundingClientRect();
-    var bigdivcoord = borders.getBoundingClientRect();
-        x = div1coord.left;
-        xb = bigdivcoord.left;
-        y = div1coord.top;
-        yb = bigdivcoord.top;
-        w = div1coord.width;
-        wb = bigdivcoord.width;
-        h = div1coord.height;
-        wh = bigdivcoord.height;
+    function getCoord() {
+        var div = document.getElementById("div2");
+        var bigcontainer = document.getElementById("div1");
+        var rectbigdiv = bigcontainer.getBoundingClientRect();
+        var rectdiv = div.getBoundingClientRect();
+        x = rectdiv.left;
+        y = rectdiv.top;
+        w = rectdiv.width;
+        h = rectdiv.height;
+        x2 = rectbigdiv.left;
+        y2 = rectbigdiv.top;
+        w2 = rectbigdiv.width;
+        h2 = rectbigdiv.height;
+        alert ("Left: " + x + ", Top: " + y + ", Width: " + w + ", Height: " + h);
 
+    }
+    document.onmousemove = function runDiv (event) {
+        if (event.clientX > x || event.clientX > x + w){
 
+        }
+        if (event.clientY > y || event.clientY > y + h){
 
-
-    document.onmousemove = function runDiv () {
-        var y = event.clientX * 70 / window.innerHeight + "%";
-        var x = event.clientY * 200 / window.innerWidth + "%";
-
-        for (var i = 0; i < 2; i++) {
-            div[i].style.left = y;
-            div[i].style.top = x;
-            div[i].style.transform = "translate(-"+x+",-"+y+")";
         }
     }
+/*    document.onmousemove = function runDiv () {
+        var newy = event.clientX * 70 / window.innerHeight + "%";
+        var newx = event.clientY * 200 / window.innerWidth + "%";
+
+        for (var i = 0; i < 2; i++) {
+            div[i].style.left = newy;
+            div[i].style.top = newy;
+            div[i].style.transform = "translate(-"+newx+",-"+newy+")";
+        }
+    }*/
 </script>
+<button onclick="getCoord()">Get top-left corner + witdth and height of the element with red border</button>
 </body>
 </html>
 
