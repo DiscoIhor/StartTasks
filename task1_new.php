@@ -10,8 +10,8 @@ Hunson Abadeer
 </head>
 <body>
 
-<div class="div1">
-    <div class="div2"></div>
+<div class="div1" id="div1">
+    <div class="div2" id="div2" ></div>
 </div>
 
 <div id="log"></div>
@@ -34,11 +34,9 @@ var bigcontainer = document.getElementsByClassName("div1");
         var y = event.pageY;
         var x = event.pageX;
         if(x >= x_div && x<=x_div + 85 && y>=y_div && y<=(y_div+85)){
-            for (var i = 0; i < 2; i++) {
-                div[i].style.left = x;
-                div[i].style.top = y;
-                div[i].style.transform = "translate(-"+x+",-"+y+")";
-            }
+                document.getElementById("div2").style.left = x;
+                document.getElementById("div2").style.top = y;
+                document.getElementById("div2").style.transform = "translate(-"+x+",-"+y+")";
         }
     })
 </script>
