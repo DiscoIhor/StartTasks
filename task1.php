@@ -1,53 +1,38 @@
+Hunson Abadeer
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        div {
-            width: 100px;
-            height: 100px;
-            background-color: red;
-            position: relative;
-            -moz-animation-name: task5;
-            -moz-animation-name: 10S;
-            -webkit-animation-name: task1;
-            -webkit-animation-duration: 4s;
-            animation-iteration-count: infinite;
-        }
-
-        @-webkit-keyframes task1 {
-            0% {
-                background-color: red;
-                left: 0px;
-                top: 0px;
-            }
-            25% {
-                left: 200px;
-                top: 0px;
-            }
-            50% {
-                left: 200px;
-                top: 200px;
-            }
-            75% {
-                green;
-                left: 0px;
-                top: 200px;
-            }
-            100% {
-                left: 0px;
-                top: 0px;
-            }
-        }
-
-    </style>
+    <script src="./jquery-3.4.1.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="task1.css" media="all">
 </head>
 <body>
 
-<div></div>
+<div id="div1">
+    <div id="div2"></div>
+</div>
 
+<script>
+        let container = document.getElementById('div1');
+        let element = document.getElementById('div2');
+
+        function randomMove(min, max) {
+            return Math.floor(Math.random() * max + min);
+        }
+
+        function changePosition(e, element) {
+            if(Math.abs(e.clientX - (element.offsetLeft + element.offsetWidth / 2)) < 81 || Math.abs(e.clientY - (element.offsetTop + element.offsetHeight / 2)) < 81) {
+                element.style.left = randomMove(100, container.clientWidth - element.offsetLeft)+"px";
+                element.style.top = randomMove(100, container.clientHeight - element.offsetTop)+"px";
+                element.style.transition = '0.1s';
+            }
+        }
+
+        container.onmousemove = (e) => {
+
+            changePosition(e, element);
+
+        };
+</script>
 </body>
 </html>
-<?php
-
-
-?>
