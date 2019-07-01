@@ -1,18 +1,13 @@
 <?php
 require_once 'header.php';
 error_reporting(E_ALL | E_STRICT);
-
 $dbh = new PDO ('mysql:host=localhost;dbname=user', 'igor', 'disc0teka');
 $slkt = $dbh->prepare('SELECT * FROM client');
 $slkt->execute();
 $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
-
-
-//require_once 'routes.php';
-//$newrouts = new Routes($_SERVER['REQUEST_URI']);  // create an Object
-//$newrouts->checkUrl($_SERVER['REQUEST_URI']);   // Check URL ending and return it
-
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +15,7 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Main page</title>
     <link rel="stylesheet" type="text/css" href="task3.css" media="all">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <header>
@@ -68,23 +64,36 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
     <div class="sidebar">
         <div class="maswin">
             <?php
-            $i = 0;
-            foreach ($rows as $scndvl) {
-                echo "<table><td>" . $scndvl['name'] . "</td></table>";
-                echo "<table><td>" . $scndvl['content'] . "</td></table>";
-                ?>
-                <form method="post">
-                <button class="delete_btn" name="del_btn" value="<?php echo $scndvl['id']; ?>">delete</button>
-                </form>
-                <?php
-                echo "_______________________________________________________________________________<br>";
+            if (isset($_POST['delbtn'])) {
+                $del = $dbh->prepare('DELETE FROM `client` WHERE id =' . $_POST['delbtn']);
+                $del->execute();
             }
+            if (isset($_POST)) {
+                foreach ($rows as $scndvl) {
+                    echo "<table><td>" . $scndvl['name'] . "</td></table>";
+                    echo "<table><td>" . $scndvl['content'] . "</td></table>";
+                    ?>
+                    <form method="post">
+                        <button name="delbtn" id="delbtn" value="<?php echo $scndvl['id']; ?>">delete</button>
+                        <br>
+                        <button name="like" id="like" class="fa fa-thumbs-up"
+                                value="<?php echo $scndvl['id']; ?>"> <?php echo $scndvl['like']; ?> </button>
+                        <button name="dislike" id="like" class="fa fa-thumbs-down"
+                                value="<?php echo $scndvl['id']; ?>"> <?php echo $scndvl['dislike']; ?> </button>
+                    </form>
+                    <?php
+                        echo "_______________________________________________________________________________<br>";
+                    }
+                }
             if (isset($_POST['title']) && isset($_POST['textform'])) {
                 echo "<table><td>" . $_POST['title'] . "</td></table>";
                 echo "<table><td>" . $_POST['textform'] . "</td></table>";
                 ?>
                 <form method="post">
-                <button  value="<?php echo 'new'; ?>">delete</button>
+                    <button value="<?php echo 'new'; ?>">delete</button>
+                    <br>
+                    <button class="fa fa-thumbs-up"></button>
+                    <button class="fa fa-thumbs-down"></button>
                 </form>
                 <?php
                 echo "_______________________________________________________________________________<br>";
@@ -100,25 +109,26 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
 </html>
 <script>
 
-    function ajaxRequest(id, title, textform) {
+    function ajaxRequest(id, title, textform, delbtn, like, dislike) {
         $.ajax({
             type: 'POST',
-            url: 'test.php',
-            data: {id: id, title: title, textform: textform},
-            dataType : 'json',
+            url: 'task3.php',
+            data: {id: id, title: title, textform: textform, delbtn: delbtn,like: like, dislike: dislike},
+            dataType: 'json',
             success: function (response) {
-                console.log(title,textform);
+                console.log(title, textform, delbtn);
                 $('#result').html(response);
             },
-            error: function() {
+            error: function () {
                 console.log("There was an error. Try again please!");
             },
         });
     }
 
-    $('.delete_btn').click(function () {
-        var id = $('.delete_btn').val();
-        ajaxRequest(id);
+    $('#delbtn').click(function () {
+        var delbtn = $('#delbtn').val();
+        alert(delbtn);
+        ajaxRequest(delbtn);
 
     });
 
@@ -126,6 +136,14 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
         var title = $('#title').val();
         var textform = $('#textform').val();
         ajaxRequest(title, textform);
+    })
+    $('#like').click(function () {
+        var like = $('#like').val();
+        ajaxRequest(like);
+    })
+    $('#dislike').click(function () {
+        var dislike = $('#dislike').val();
+        ajaxRequest(dislike);
     })
 </script>
 <?php
@@ -139,15 +157,30 @@ if (isset($_POST['title']) && isset($_POST['textform'])) {
     $ins->bindValue(':name', $title, PDO::PARAM_STR_CHAR);
     $ins->execute();
 }
-
-if (isset($_POST['del_btn'])) {
-    $del = $dbh->prepare('DELETE FROM `client` WHERE id =' . $_POST['del_btn']);
-    $del->execute();
+if (isset ($_POST['like'])) {
+    $inslike = $dbh->prepare('UPDATE `client` SET `like` = `like` + 1 WHERE id ='.$_POST['like']);
+    $inslike->execute();
 }
-
-
+if (isset($_POST['dislike'])) {
+    $insdislike = $dbh->prepare('UPDATE `client` SET `dislike` = `dislike` - 1 WHERE id=' .$_POST['dislike']);
+    $insdislike->execute();
+}
 var_dump($_POST);
+echo "<br>";
+echo "<br>";
+echo "<br>";
+
 
 ?>
 
+
+<!--CREATE TABLE client (
+id INT NOT NULL AUTO_INCREMENT,
+PRIMARY KEY (id),
+title VARCHAR (50),
+textform VARCHAR (200),
+img VARCHAR (50),
+like INT NOT NULL DEFAULT 0,
+dislike INT NOT NULL DEFAULT 0
+)-->
 
