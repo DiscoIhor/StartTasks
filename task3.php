@@ -79,8 +79,9 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
                     echo "<table><td>" . $scndvl['content'] . "</td></table>";
                     ?>
                     <form method="post">
-                        <button name="delbtn" id="delbtn" value="<?php echo $scndvl['id']; ?>">delete</button>
+                        <img id="<?php echo $scndvl['id']; ?>" src="<?php echo $scndvl['image'];  ?>" alt="img" width="125" height="100" ">
                         <br>
+                        <button name="delbtn" id="delbtn" value="<?php echo $scndvl['id']; ?>">delete</button>
                         <button name="like" id="like" class="fa fa-thumbs-up"
                                 value="<?php echo $scndvl['id']; ?>"> <?php echo $scndvl['like']; ?> </button>
                         <button name="dislike" id="like" class="fa fa-thumbs-down"
@@ -88,6 +89,23 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
                     </form>
                     <?php
                     echo "_______________________________________________________________________________<br>";
+                    ?>
+                    <script>
+                        var modal = document.getElementById("myModal");
+                        var img = document.getElementById("<?php echo $scndvl['id']; ?>");
+                        var modalImg = document.getElementById("img01");
+                        var captionText = document.getElementById("caption");
+                        img.onclick = function(){
+                            modal.style.display = "block";
+                            modalImg.src = this.src;
+                            captionText.innerHTML = this.alt;
+                        }
+                        var span = document.getElementsByClassName("close")[0];
+                        span.onclick = function() {
+                            modal.style.display = "none";
+                        }
+                    </script>
+                    <?php
                 }
             }
             if (isset($_POST['title']) && isset($_POST['textform'])) {
@@ -96,8 +114,6 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
                 ?>
                 <form method="post">
                     <button value="<?php echo 'new'; ?>">delete</button>
-                    <br>
-                    <br>
                     <button class="fa fa-thumbs-up"></button>
                     <button class="fa fa-thumbs-down"></button>
                 </form>
@@ -148,15 +164,14 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
         })
     </script>
 </footer>
-<img id="myImg" src="setwalls.ru-6896.jpg" alt="Fin" style="width:100%;max-width:300px">
-<script src="./task3.js"></script>
+<!--<script src="./task3.js"></script>-->
 </body>
 </html>
 <?php
 if (isset($_POST['title']) && isset($_POST['textform'])) {
     $title = $_POST['title'];
     $textform = $_POST['textform'];
-    $img_from_form = $_POST['img'];
+    $img_from_form = $_POST['image'];
     $ins = $dbh->prepare('INSERT INTO  client (content,image,name) VALUES (:content,:image,:name )');
     $ins->bindValue(':content', $textform, PDO::PARAM_STR_CHAR);
     $ins->bindValue(':image', $img_from_form, PDO::PARAM_STR_CHAR);
@@ -171,12 +186,6 @@ if (isset($_POST['dislike'])) {
     $insdislike = $dbh->prepare('UPDATE `client` SET `dislike` = `dislike` + 1 WHERE id=' . $_POST['dislike']);
     $insdislike->execute();
 }
-/*var_dump($_POST);*/
-echo "<br>";
-echo "<br>";
-echo "<br>";
-/*echo $_POST['like'];*/
-
 ?>
 <!--CREATE TABLE client (
 id INT NOT NULL AUTO_INCREMENT,
