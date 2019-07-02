@@ -19,6 +19,11 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 <header>
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
     <div class="logo">
         <a href="main">
             <img alt="logotype" src="gb.png">
@@ -57,7 +62,7 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
             <p>
                 <input type="submit" id="btn" name="send_btn" value="Send">
             </p>
-            <input type="file" id="img" name="img">
+            <input type="file" id="image" name="image">
         </form>
 
     </div>
@@ -82,15 +87,16 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
                                 value="<?php echo $scndvl['id']; ?>"> <?php echo $scndvl['dislike']; ?> </button>
                     </form>
                     <?php
-                        echo "_______________________________________________________________________________<br>";
-                    }
+                    echo "_______________________________________________________________________________<br>";
                 }
+            }
             if (isset($_POST['title']) && isset($_POST['textform'])) {
                 echo "<table><td>" . $_POST['title'] . "</td></table>";
                 echo "<table><td>" . $_POST['textform'] . "</td></table>";
                 ?>
                 <form method="post">
                     <button value="<?php echo 'new'; ?>">delete</button>
+                    <br>
                     <br>
                     <button class="fa fa-thumbs-up"></button>
                     <button class="fa fa-thumbs-down"></button>
@@ -103,49 +109,49 @@ $rows = $slkt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </main>
 <footer>
+    <script>
+        function ajaxRequest(id, title, textform, delbtn, like, dislike) {
+            $.ajax({
+                type: 'POST',
+                url: 'task3.php',
+                data: {id: id, title: title, textform: textform, delbtn: delbtn, like: like, dislike: dislike},
+                dataType: 'json',
+                success: function (response) {
+                    console.log(title, textform, delbtn, like, dislike);
+                    $('#result').html(response);
+                },
+                error: function () {
+                    console.log("There was an error. Try again please!");
+                },
+            });
+        }
 
+        $('#delbtn').click(function () {
+            var delbtn = $('#delbtn').val();
+            alert(delbtn);
+            ajaxRequest(delbtn);
+
+        });
+
+        $('#btn').click(function () {
+            var title = $('#title').val();
+            var textform = $('#textform').val();
+            ajaxRequest(title, textform);
+        })
+        $('#like').click(function () {
+            var like = $('#like').val();
+            ajaxRequest(like);
+        })
+        $('#dislike').click(function () {
+            var dislike = $('#dislike').val();
+            ajaxRequest(dislike);
+        })
+    </script>
 </footer>
+<img id="myImg" src="setwalls.ru-6896.jpg" alt="Fin" style="width:100%;max-width:300px">
+<script src="./task3.js"></script>
 </body>
 </html>
-<script>
-
-    function ajaxRequest(id, title, textform, delbtn, like, dislike) {
-        $.ajax({
-            type: 'POST',
-            url: 'task3.php',
-            data: {id: id, title: title, textform: textform, delbtn: delbtn,like: like, dislike: dislike},
-            dataType: 'json',
-            success: function (response) {
-                console.log(title, textform, delbtn);
-                $('#result').html(response);
-            },
-            error: function () {
-                console.log("There was an error. Try again please!");
-            },
-        });
-    }
-
-    $('#delbtn').click(function () {
-        var delbtn = $('#delbtn').val();
-        alert(delbtn);
-        ajaxRequest(delbtn);
-
-    });
-
-    $('#btn').click(function () {
-        var title = $('#title').val();
-        var textform = $('#textform').val();
-        ajaxRequest(title, textform);
-    })
-    $('#like').click(function () {
-        var like = $('#like').val();
-        ajaxRequest(like);
-    })
-    $('#dislike').click(function () {
-        var dislike = $('#dislike').val();
-        ajaxRequest(dislike);
-    })
-</script>
 <?php
 if (isset($_POST['title']) && isset($_POST['textform'])) {
     $title = $_POST['title'];
@@ -158,22 +164,20 @@ if (isset($_POST['title']) && isset($_POST['textform'])) {
     $ins->execute();
 }
 if (isset ($_POST['like'])) {
-    $inslike = $dbh->prepare('UPDATE `client` SET `like` = `like` + 1 WHERE id ='.$_POST['like']);
+    $inslike = $dbh->prepare('UPDATE `client` SET `like` = `like` + 1 WHERE id =' . $_POST['like']);
     $inslike->execute();
 }
 if (isset($_POST['dislike'])) {
-    $insdislike = $dbh->prepare('UPDATE `client` SET `dislike` = `dislike` - 1 WHERE id=' .$_POST['dislike']);
+    $insdislike = $dbh->prepare('UPDATE `client` SET `dislike` = `dislike` + 1 WHERE id=' . $_POST['dislike']);
     $insdislike->execute();
 }
-var_dump($_POST);
+/*var_dump($_POST);*/
 echo "<br>";
 echo "<br>";
 echo "<br>";
-
+/*echo $_POST['like'];*/
 
 ?>
-
-
 <!--CREATE TABLE client (
 id INT NOT NULL AUTO_INCREMENT,
 PRIMARY KEY (id),
