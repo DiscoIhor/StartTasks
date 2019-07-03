@@ -24,25 +24,68 @@ Class Product
 
 Class Robot
 {
-    public $step1;
-    public $step2;
-    public $step3;
-    public $step4;
-    public $step5;
-    public $step6;
+    public $irobot1;
+    public $irobot2;
+    public $irobot3;
+    public $irobot4;
+    public $irobot5;
+    public $irobot6;
 
-    function __construct($step1, $step2, $step3, $step4, $step5, $step6)
+    function __construct($irobot1, $irobot2, $irobot3, $irobot4, $irobot5, $irobot6)
     {
-        $this->step1;
-        $this->step2;
-        $this->step3;
-        $this->step4;
-        $this->step5;
-        $this->step6;
+        $this->irobot1;
+        $this->irobot2;
+        $this->irobot3;
+        $this->irobot4;
+        $this->irobot5;
+        $this->irobot6;
     }
 
-    public function takeBlank($step1)
+    public function takeBlank()
+    {
+        if ($this != null) {
+            return $this;
+        }
+    }
+}
+
+interface Robotshelper
+{
+    public function checkRobot()
+    {
+        switch ($this) {
+            case $irobot1:
+                return $blanc = $this->irobot1;
+            case $irobot2:
+                return $blanc = $this->irobot2;
+            case $irobot3:
+                return $blanc = $this->irobot3;
+            case $irobot4:
+                return $blanc = $this->irobot4;
+            case $irobot5:
+                return $blanc = $this->irobot5;
+            case $irobot6:
+                return $blanc = $this->irobot6;
+        }
+    }
+}
+
+class Storage
+{
+    public $phone;
+
+    function getInfo()
+    {
+        echo $this->phone;
+    }
+}
+
+interface  Conveyor
+{
+    public function transportProduct()
     {
 
     }
 }
+
+?>
