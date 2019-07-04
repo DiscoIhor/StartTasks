@@ -1,76 +1,90 @@
 <?php
 
-Class Product
-{
-    public $blanc;
-    public $phone;
+namespace App;
 
-    function __construct($blanc, $phone)
+
+interface IProduct
+{
+    function setState(string $state): void;
+}
+
+class Product implements IProduct
+{
+    protected $state;
+
+    public function __construct()
     {
-        $this->$blanc = $blanc;
-        $this->$phone = $phone;
+        $this->state = 'initial';
     }
 
-    function defineProduct($blanc, $phone)
+    public function setState(string $state): void
     {
-        if (is_null($blanc)) {
-            return "{$blanc->False}";
-        }
-        if (is_null($phone)) {
-            return "{$phone->False}";
-        }
+        $this->state = $state;
     }
 }
 
-Class Robot
+class Conveyor implements \Iterator
 {
-    public $irobot1;
-    public $irobot2;
-    public $irobot3;
-    public $irobot4;
-    public $irobot5;
-    public $irobot6;
+    public $position;
+    protected $irobot = array(
+        '1', '2', '3', '4', '5', '6'
+    );
 
-    function __construct($irobot1, $irobot2, $irobot3, $irobot4, $irobot5, $irobot6)
+    public function rewind()
     {
-        $this->irobot1;
-        $this->irobot2;
-        $this->irobot3;
-        $this->irobot4;
-        $this->irobot5;
-        $this->irobot6;
+        $this->position = 0;  // Вызов rewind: устанавливаем итератор на начальную позицию
     }
 
-    public function takeBlank()
+    public function current()
     {
-        if ($this != null) {
-            return $this;
-        }
+        return $this->irobot[$this->position]; //Вызов current: получаем текущий элемент
+    }
+
+    public function next()
+    {
+        ++$this->position; //Вызов next: сдвигаем итератор на один элемент вперёд
+    }
+
+    public function key()
+    {
+        return $this->position; //Вызов key: получаем текущую позицию
+    }
+
+    public function valid()
+    {
+        $isValid = isset($this->items[$this->position]);
+        echo "Вызов valid: проверка корректность текущей позиции - (" . ($isValid ? 'оk' : 'fail') . ") <br />";
+        return $isValid;
     }
 }
 
-interface Robotshelper
+class Robot extends Conveyor
 {
+    protected $irobot = array();
+    public $position;
+
     public function checkRobot()
     {
         switch ($this) {
-            case $irobot1:
-                return $blanc = $this->irobot1;
-            case $irobot2:
-                return $blanc = $this->irobot2;
-            case $irobot3:
-                return $blanc = $this->irobot3;
-            case $irobot4:
-                return $blanc = $this->irobot4;
-            case $irobot5:
-                return $blanc = $this->irobot5;
-            case $irobot6:
-                return $blanc = $this->irobot6;
+            case 1:
+                return $position = 1;
+            case 2:
+                return $position = 2;
+            case 3:
+                return $position = 3;
+            case 4:
+                return $position = 4;
+            case 5:
+                return $position = 5;
+            case 6:
+                return $position = 6;
+            default :
+                echo "Nothing happens";
         }
     }
 }
 
-class Storage
+class Storage extends Robot
 {
     public $phone;
 
@@ -78,14 +92,16 @@ class Storage
     {
         echo $this->phone;
     }
-}
 
-interface  Conveyor
-{
-    public function transportProduct()
+    function addPhone()
     {
-
+        if ($this > 6) {
+            ++$this->position;
+        }
     }
 }
+
+$obj = new namespace\Product('blank');
+
 
 ?>
